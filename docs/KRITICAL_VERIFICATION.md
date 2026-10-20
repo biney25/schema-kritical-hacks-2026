@@ -1,26 +1,19 @@
-# Kritical verification record
+# Tests and reproducibility
 
-Checked 20 October 2026 against this copied source. The original AZINHACK repository was not edited.
+Run `pnpm test`, `pnpm check` and `pnpm customer:build`. GitHub Actions repeats these checks on each push.
 
-| Check | Result | Practical limit |
-|---|---|---|
-| pnpm test | 85 passed, 0 failed | Local automated tests, not hosted acceptance |
-| pnpm check | Passed | Type checking |
-| pnpm customer:build | Passed | Customer identity-boundary build check |
-| TinyFish provider extraction | Completed in 5 steps | Connected tool run, not the app's authenticated HTTP route |
-| Reviewed facts -> save -> reopen | Passed in local journal integration test | Test database; live customer host still outstanding |
-| Public new repository | Separate repository published | Imported AZINHACK history plus Kritical source and submission assets; hosted acceptance remains separate |
-| Hosted login/provider/save/reopen | Not verified | Isolated host, database and server credentials required |
-| Personal-memory AI live answers | Not verified | Separate provider configuration and source-quality checks required |
+## Automated coverage
 
-## Added in this copy
+The tests exercise public URL validation, provider request limits, structured result parsing, signed run ownership, approved-field draft creation, date ranges, journal save/reopen, account isolation, account controls and storage boundaries.
 
-Provider calls now have explicit 12-step and 120-second caps. Retrieval time travels into reviewed drafts. Unselected facts stay out. Multi-day event dates remain text instead of becoming an invented personal-entry date. Branding no longer points the active UI to AZINHACK.
+`tests/tinyfish-demo.test.mjs` starts the recorded CLI workflow as a separate process, checks the saved file and confirms that unapproved facts stay out of its draft. It makes no provider request.
 
-## Live evidence
+## Provider evidence
 
-`evidence/tinyfish-live-provider.json` records run 43e6a572-a11c-45c5-b8b5-a355b2abe946 against https://us.pycon.org/2026/. The public source independently confirms event dates and venue. The returned excerpt uses compressed wording, so it is not presented as a continuous verified quotation.
+`evidence/tinyfish-live-provider.json` records a completed TinyFish run against https://us.pycon.org/2026/. It completed in five steps and returned event dates, venue and program sections. This capture used the connected TinyFish tool and does not claim to be an authenticated request from the hosted web app.
 
-## Pending release actions
+## Live reproduction
 
-The separate public repository is https://github.com/biney25/schema-kritical-hacks-2026. Configure a separate customer host with `KRITICAL_SETUP.md` and run a real login -> URL -> research -> selected facts -> save -> reload acceptance flow. Never replace these gates with unit-test counts or claim the connected-tool run exercised the hosted app. The team roster remains provisional until confirmed by the owner.
+Set `TINYFISH_API_KEY` and run `pnpm demo:tinyfish --url https://us.pycon.org/2026/ --fields title,venue`. The command uses the same provider and draft modules as the web interface. The saved file identifies whether the research was live or recorded.
+
+For the web app, configure the services in `KRITICAL_SETUP.md`, then sign in, research a public event, approve fields, save and reopen the page. Test another account's inability to read the page or use its research token. Automated tests and a standalone provider run cover different boundaries from that hosted account flow.

@@ -1,15 +1,15 @@
-Photos keep what a day looked like. I wanted a place for the details I would otherwise forget.
+I have photos from days I barely remember now. The photo is still there, but the conversation, the people around it or the reason I took it can disappear.
 
-That is what I am building with Schema: a private scrapbook where a photo, a few words and the people around a moment can stay together.
+Schema is a private scrapbook for those details. Add a photo, write a few words and keep the page in your life archive.
 
-For Kritical Hacks, we have added a TinyFish workflow. You paste a public event page, the agent reads its details, and Schema lets you choose which facts should enter your draft. Your own note stays separate from the public context. Nothing is added automatically.
+For events, we added a TinyFish workflow. Paste the public event website and the agent reads its title, dates, venue and program. You check the returned facts and choose what enters your draft. The source stays attached. Your private notes and photos stay outside the research request.
 
-We ran a live provider test on the PyCon US website and got back its dates, venue and program sections. The code and review flow are implemented, with local save/reopen tests. We are still completing authenticated hosted verification.
+One of our live TinyFish runs returned PyCon US 2026's dates, venue and program sections in five steps. The repository includes that result and a command to reproduce the research and reviewed-draft workflow.
 
-The broader idea is to make these pages useful years later: finding the people, places and thoughts that connect different parts of your life.
+The next step is a small adult-user pilot to see whether people actually return to the pages they make.
 
-I would like feedback on this: what is something you wish you had written down alongside an old photo?
+What is one detail you wish you had written down beside an old photo?
 
-Code: https://github.com/biney25/schema-kritical-hacks-2026
+Project: https://github.com/biney25/schema-kritical-hacks-2026
 
-#BuildInPublic #TinyFish #KriticalHacks
+#Schema #TinyFish #BuildInPublic

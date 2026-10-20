@@ -1,13 +1,45 @@
-# Isolated Kritical host setup
+# Web app setup
 
-The source is prepared. Live acceptance needs owner-controlled service configuration.
+Requirements: Node 24, pnpm 11.25 and a Supabase project dedicated to this app.
 
-1. Create or select an isolated customer Supabase project containing demo data only. Apply the existing migrations in order and follow `docs/CUSTOMER_SETUP.md` for storage and upload/worker functions.
-2. Set server-only `SCHEMA_CUSTOMER_HOST=true`, `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` and `APP_ORIGIN` for that host. Configure confirmed-email signup and callback URLs.
-3. Set `TINYFISH_ENABLED=true`, a server-only `TINYFISH_API_KEY`, and `TINYFISH_ALLOWED_EMAILS` with the confirmed demo account email. Keys belong in host secrets, never in a repo, slide, screenshot or chat message.
-4. Apply the account quota migration. Keep provider-side spending limits enabled. Each request is capped at 12 steps and 120 seconds; failed starts consume a demo allowance.
-5. Run `pnpm customer:build`, start the host, sign in and open My life. Research https://us.pycon.org/2026/ or another suitable public event page. Select only title and venue. Create the draft, add a clearly illustrative note, save, reload, reopen. Confirm unselected program details did not enter the page.
-6. Verify an inaccessible page returns a recoverable error. A second account must not read the saved page or another account's research token.
-7. If demonstrating Ask, separately configure the server AI provider/model and allowlist, opt in to AI and allow the relevant page. Test the actual answer/source relationship and abstention on missing evidence.
+## Database and accounts
 
-The connected-tool provider test does not satisfy steps 1–7. Demo data must not imply anyone attended an event they did not attend. The existing private Sites deployment is outside this copy's release scope.
+Apply the migrations under `supabase/migrations` in order. They define account profiles, journal records, private media metadata, consent, background jobs and account quotas. Configure private storage and deploy the upload/worker functions under `supabase/functions`.
+
+In Supabase Auth, set the application site URL and allow its exact `/auth/callback` redirect. Local development uses `http://localhost:3000`. Enable confirmed-email accounts and configure the sender for signup and recovery.
+
+## Server configuration
+
+Copy `.env.example` to `.env.local` for local use. On a host, put the same values in its environment settings:
+
+| Variable | Value |
+|---|---|
+| `SCHEMA_CUSTOMER_HOST` | `true` |
+| `SUPABASE_URL` | Project API URL |
+| `SUPABASE_PUBLISHABLE_KEY` | Project publishable key |
+| `APP_ORIGIN` | Exact app origin, with no trailing slash |
+| `TINYFISH_ENABLED` | `true` |
+| `TINYFISH_API_KEY` | TinyFish server API key |
+| `TINYFISH_ALLOWED_EMAILS` | Comma-separated approved demo accounts |
+
+Keep keys out of source control. TinyFish starts are limited to five per account per UTC day by the quota migration. Each provider run is capped at 12 steps and 120 seconds. Failed starts can consume an allowance. Set an account budget in TinyFish too.
+
+Personal-memory answers are optional and use separate `AI_ENABLED`, `AI_ALLOWED_EMAILS`, `OPENAI_API_KEY` and `OPENAI_MODEL` settings. Per-account consent and per-page permission still apply. Billing stays disabled.
+
+## Start
+
+```bash
+pnpm install --frozen-lockfile
+pnpm test
+pnpm check
+pnpm customer:build
+pnpm customer:dev
+```
+
+For deployment, use `pnpm customer:build` as the build command. The repository includes `vercel.json` for a standalone Next.js host.
+
+## Exercise the workflow
+
+Sign in, open My life and paste a public event page. Approve only title and venue, create the draft, add a personal note, save, reload and reopen. Confirm that other returned fields stayed out. Check a failed page and account isolation separately.
+
+To exercise research and draft persistence without the account database, use `pnpm demo:tinyfish` as described in the README.

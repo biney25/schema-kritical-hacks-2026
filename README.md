@@ -1,88 +1,97 @@
-# Schema · Kritical Hacks 2026
+# Schema
 
-A private scrapbook for the story behind your photos. Schema combines your own notes and media with optional **public event context researched by TinyFish**, reviewed one fact at a time before it enters an editable journal draft.
+**The story behind your photos.**
 
-**Provisional team details:** LineOfCode · Delhi Technological University · AI/ML Student Track. The names below come from the supplied earlier deck. The Kritical roster is awaiting the owner's confirmation and must match the final Unstop registration.
+A photo keeps the scene. Schema keeps the people, places and small details that made it matter. It is a private scrapbook for young adults who want their memories to feel like their own pages, with photos, personal notes and an archive they can revisit.
 
-## Review the submission
+[Pitch deck](submission/Schema_Kritical_Round1.pdf) · [PowerPoint](submission/Schema_Kritical_Submit.pptx) · [Economics model](submission/Schema_Kritical_Economics.xlsx)
 
-- [Eight-slide pitch PDF](submission/Schema_Kritical_Round1.pdf)
-- [Fixed-layout submission PowerPoint](submission/Schema_Kritical_Submit.pptx)
-- [Editable PowerPoint](submission/Schema_Kritical_Round1.pptx)
-- [Economics and market workbook](submission/Schema_Kritical_Economics.xlsx)
-- [Verification record](docs/KRITICAL_VERIFICATION.md)
-- [Live TinyFish provider evidence](evidence/tinyfish-live-provider.json)
-- [Setup and acceptance steps](docs/KRITICAL_SETUP.md)
+![An illustrative Schema scrapbook page](docs/assets/memory-page.png)
 
-The demo video is prepared separately by the team and is not included in this source checkpoint. A public post link will be added after the owner publishes it.
+## What it does
 
-## One memory loop
+- Create a journal page with photos and your own words.
+- Keep pages together in a chronological life archive.
+- Add public event context through TinyFish, then choose each fact before it enters a draft.
+- Keep the source link and retrieval time alongside the selected context.
+- Control which saved pages the optional memory assistant can use.
 
-1. Add a photo and your own note.
-2. Supply a public HTTPS event page and consent to research.
-3. TinyFish browses event information and returns structured title/date/venue/program candidates.
-4. Inspect the source and select only the facts you want.
-5. Open an editable draft, add personal context, save, then revisit it in the archive.
+The scrapbook above is an illustrative page. Public event information stays distinct from the user's personal account of the day.
 
-Public facts are not evidence that the user attended the event or experienced anything described on its website. Date ranges remain public context text; users select the date of their own memory.
+## Why TinyFish belongs here
 
-## TinyFish implementation
+An event's name, venue and program can sit across interactive tabs and schedules. TinyFish's Web Agent browses the public page and returns structured candidates. Schema turns those candidates into a draft only after the user reviews them.
 
-The app uses the Web Agent API, not a decorative sponsor badge:
+1. The user supplies a public HTTPS event link and agrees to research it.
+2. The server authenticates the account, validates the URL and reserves its research allowance.
+3. TinyFish starts an asynchronous browser job with a fixed extraction goal, a **12-step limit** and a **120-second limit**.
+4. Schema polls the run using a signed token tied to its owner.
+5. The user selects facts. The draft builder includes only those selections, their source and retrieval time.
 
-- `POST /api/tinyfish`: authenticated account, same-origin write check, explicit demo-email allowlist and atomic account quota before the provider call.
-- `lib/tinyfish/provider.mjs`: `POST https://agent.tinyfish.ai/v1/automation/run-async`, then `GET /v1/runs/{run_id}`. Each start has a **12-step, 120-second limit**. There are no automatic paid retries.
-- `lib/tinyfish/context.mjs`: fixed goal, public-URL restrictions, bounded field parsing, owner-bound signed run tokens and selected-fact draft construction.
-- `app/tinyfish-context.tsx`: consent, progress/error states, source link, retrieval timestamp and per-field approval.
-- New provider and save/reopen tests exercise the same helpers used by the route and UI.
+Private journal text and photos never enter the TinyFish request. The provider key stays on the server. Failed research leaves the journal unchanged.
 
-Only a public URL and fixed research instructions reach TinyFish. Private notes, photos, account credentials and personal history are not included. A blocked/failed page does not change a journal draft. The provider key remains on the server. No authenticated social scraping or automated whole-life reconstruction is part of this workflow.
+Implementation: [provider calls](lib/tinyfish/provider.mjs), [HTTP route](app/api/tinyfish/route.ts), [review interface](app/tinyfish-context.tsx) and [draft builder](lib/tinyfish/context.mjs).
 
-## Current verification
+A live TinyFish provider run extracted PyCon US 2026's dates, venue and program sections in five steps. Its [recorded result](evidence/tinyfish-live-provider.json) identifies the source and capture method.
 
-On 20 October 2026 this copy passed **85 automated tests**, `pnpm check` and the customer production build. Local tests cover provider boundaries, selected-fact draft creation, journal save/reopen and cross-account rejection. These results are not a production certification.
+## Run the TinyFish workflow
 
-A connected TinyFish live run extracted PyCon US 2026 facts in five steps. See the evidence JSON for the capture method and source. It was a provider-only test through the connected tool, **not an authenticated request from a hosted Schema instance**.
-
-Still requiring live acceptance: isolated host/database setup, confirmed account login, server key configuration, real `/api/tinyfish` execution and saved-page reopen on that host. Personal-memory AI also needs separate provider configuration and citation testing. Its current adapter uses bounded keyword matching, not semantic/pgvector retrieval.
-
-## Run a separate customer host
-
-Requirements: Node 24, pnpm 11.25, an isolated customer Supabase project and server environment configuration. Never use the founder's private Sites database or credentials.
+Use Node 24 and pnpm 11.25. This command runs research and reviewed-draft creation without setting up the web app's account database.
 
 ```bash
 pnpm install --frozen-lockfile
-pnpm test
-pnpm check
-pnpm customer:build
+pnpm demo:tinyfish --url https://us.pycon.org/2026/ --fields title,venue
+```
+
+Set `TINYFISH_API_KEY` in your shell or secret manager before a live run. The command prints the returned facts, saves a source-labelled draft under `.demo/memories/`, then reopens it from disk. `--fields` specifies the facts you approve. Run without `--fields` to choose interactively.
+
+To inspect the draft workflow using the recorded provider result, with no API call or credit use:
+
+```bash
+pnpm demo:tinyfish --example --fields title,venue
+```
+
+Recorded mode is labelled in both the terminal and saved file.
+
+## Run the web app
+
+Copy `.env.example` to `.env.local` and configure Supabase Auth, Postgres and private storage using the [setup guide](docs/KRITICAL_SETUP.md). Enable TinyFish with its server key and approved demo-account emails.
+
+```bash
 pnpm customer:dev
 ```
 
-Start from `.env.example`, then follow [KRITICAL_SETUP.md](docs/KRITICAL_SETUP.md). Real credentials are not committed. The app deliberately fails closed if auth/provider setup is absent. The private Sites mode is retained for source provenance and is not an independently public backend.
+Open `http://localhost:3000`, sign in, and open **My life** to add event context. A hosted deployment uses the same server variables and `pnpm customer:build`.
 
-## Commercial hypothesis
+## Technical approach
 
-Proposed web plans: Free with 250 MB media and five AI answers/month; Plus at **₹149/month**, 5 GB, fifty AI answers and one bounded research start/month. These are pricing research proposals, not current billing entitlements. The restricted hackathon demo has separate five-starts/day account quotas.
+| Layer | Implementation |
+|---|---|
+| Interface | Next.js, React and TypeScript |
+| Accounts and records | Supabase Auth and Postgres with row-level security |
+| Media | Private object storage |
+| Web research | TinyFish asynchronous Web Agent |
+| Draft creation | Per-field approval with source provenance |
+| Optional memory answers | Consent-based retrieval of permitted journal text with source references |
 
-The workbook models tax/fee assumptions, storage, transfer, TinyFish steps, AI budgets, support and free-user subsidy. Typical proposed paid usage costs about ₹27/month before shared infrastructure. Full usage is materially higher and the small-cohort stress case can be negative. No unlimited usage or annual discount is promised before measuring costs. Existing diary pages should remain readable/exportable after cancellation.
+The current memory retrieval adapter ranks keyword matches. Semantic memory connections and native mobile apps are future work.
 
-## Product scope
+## Price economics
 
-Implemented source includes the page editor, archive, privacy controls, account/database adapters and TinyFish review workflow. Future work includes better memory retrieval, native mobile pages, selected imports, voice improvements and scoped shared albums. No achieved retention, paid traction, user interview result, end-to-end encryption or large-scale readiness is claimed.
+The proposed model offers a limited free plan and **Plus at ₹149/month**, with explicit storage, AI and research allowances. Typical modeled variable cost is about **₹27 per paid user per month**. After illustrative tax and payment-fee assumptions, about **₹96** remains before free-user subsidy and shared fixed costs.
 
-## Provenance
+The [workbook](submission/Schema_Kritical_Economics.xlsx) contains formulas, usage assumptions, competitor prices, source links and a full-allowance stress case. These are proposed prices and modeled costs. Billing is disabled in the prototype.
 
-This is a separate Kritical copy derived from `biney25/schema-azinhack-2026`, starting at commit `1be8ee5687d7b619cf0afd8cbd0fc84e9de71c57`. Imported history records earlier development. The original AZINHACK repository and private Schema deployment remain unchanged. Historic competition notes sit under `docs/history` and are not current submission instructions. Check the organiser's policy on reusing prior work; this repository does not claim all code originated during Kritical.
+## Checks
 
-## Team
+```bash
+pnpm test
+pnpm check
+pnpm customer:build
+```
 
-Provisional carryover from the earlier deck; final Kritical membership and roles are not yet confirmed.
+Tests cover research limits, signed run ownership, selected-fact drafts, journal persistence and account isolation. [GitHub Actions](https://github.com/biney25/schema-kritical-hacks-2026/actions) runs the same checks.
 
-- Tushar Aggarwal: product, integration and testing
-- Rajat Maan: backend and source-based answers
-- Shrivats Goel: TinyFish workflow and failure handling
-- Vanshika Pasi: design, editor and review experience
+## Development
 
-## Source safety and licensing
-
-Keep `.env`, keys, private journals and database exports out of commits. The repository contains no customer data. The project remains subject to its owner's licensing decisions; public review access alone does not grant commercial relicensing rights. Bundled dependencies retain their upstream licenses.
+Built for the AI/ML Student Track at Kritical Hacks 2026. This repository extends Schema's existing codebase with bounded TinyFish event research, reviewed draft creation and the competition submission. Earlier development remains in the imported commit history. See [source provenance](docs/PROVENANCE.md).
