@@ -1,3 +1,4 @@
+import {createReviewedDraft,parsePublicFacts} from '../lib/tinyfish/context.mjs';
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { DatabaseSync } from 'node:sqlite';
@@ -409,4 +410,19 @@ test('scheduler adapter processes only due erasure jobs and bounds each sweep',a
     const {requestErasure,runDueErasureJobs}=await import('../lib/server/jobs.mjs');const {env,sqlite}=setup();await requestErasure(env.DB,'alice');await requestErasure(env.DB,'bob');
     const result=await runDueErasureJobs(env,{limit:1,now:new Date(Date.now()+1000)});assert.equal(result.examined,1);assert.equal(result.completed,1);assert.equal(sqlite.prepare("SELECT count(*) n FROM jobs WHERE state='pending'").get().n,1);
     await assert.rejects(()=>runDueErasureJobs(env,{limit:500}));
+});
+
+
+test('reviewed public facts save and reopen through journal ownership checks', async()=>{
+ const {env}=setup();
+ const facts={...parsePublicFacts({title:'PyCon US 2026',date:'May 13 to May 19, 2026',venue:'Long Beach',lineup:['Tutorials']},'https://us.pycon.org/2026/'),fetchedAt:'2026-10-20T09:00:00.000Z'};
+ const reviewed=createReviewedDraft(facts,['venue'],{entryDate:'2026-10-20'});
+ const page=entry({...reviewed,body:reviewed.body.replace('(Write what this day meant to you.)','My own example note.')});
+ await asJson(env,'entries',alice,'POST',page);
+ const reopened=await asJson(env,'entries/'+page.id);
+ assert.equal(reopened.entry.place,'Long Beach');
+ assert.match(reopened.entry.body,/My own example note/);
+ assert.match(reopened.entry.body,/Retrieved: 2026-10-20/);
+ assert.doesNotMatch(reopened.entry.body,/Event title:|Event date:|Public program:/);
+ await rejects(()=>call(env,'entries/'+page.id,bob),404);
 });

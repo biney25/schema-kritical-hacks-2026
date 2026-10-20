@@ -1,0 +1,66 @@
+SCHEMA KRITICAL ROUND 1 ANSWERS
+
+Project name
+Schema
+
+Team / category
+LineOfCode · Delhi Technological University · AI/ML Student Track
+Team details and the four-member roster are provisional carryover from the supplied earlier deck. The owner will confirm the Kritical roster later; update the team slide and registration together before submitting.
+
+One-line description
+A private scrapbook that keeps your own memories alongside public event facts researched by TinyFish and selected by you.
+
+Project summary
+Schema helps people preserve the story behind their photos. Users create private scrapbook pages from photos, notes and personal context, then revisit them through a life archive. When a user provides a public event link, TinyFish reads the event details and returns structured fact candidates. The user checks each fact and chooses what enters an editable draft. Public context stays distinct from personal memory. The source contains the journal, archive, privacy and account adapters plus the TinyFish workflow. It passes local tests and a customer build, and a live connected-provider extraction succeeded. Authenticated hosted extraction and save/reopen remain to be verified. The commercial proposal uses capped plans and a cost model that includes storage, AI, TinyFish and free-user costs.
+
+Problem statement
+Photos preserve a scene but often miss the small details that explain why a day mattered. Those details may be personal, such as who was there, or publicly documented, such as an event's program. Reconstructing them with an unconstrained AI risks mixing guesses with real memories. People need a simple way to preserve their own words and add traceable public context deliberately.
+
+Proposed solution
+Schema provides a private scrapbook page and a connected archive. A user adds media and their own note. For an event page they explicitly supply, TinyFish researches public details. Schema displays the result with its source and retrieval time, and requires individual selection before creating a draft. The person can edit that draft, add personal context and save it. The wider product includes optional source-based reflection, privacy controls and deliberate sharing.
+
+Target users and use case
+Initial users are adults aged 18–30 who photograph their lives and want a private, creative record. The focused use case is preserving an event memory with a photo and personal note, then checking its public title, venue or program against the event website. An illustrative example is a campus gig. The provider test used the public PyCon US website and does not imply any team member attended it.
+
+Role of AI/ML
+TinyFish's browser agent interprets a bounded extraction goal, navigates public event information and returns structured candidates. Human review controls whether those candidates enter a page. A separate optional memory-answer adapter retrieves permitted saved text and returns source references. Its current retrieval uses bounded keyword matching; live personal-memory AI and semantic retrieval are not claimed as verified.
+
+Proposed technical approach
+Next.js and React provide the page editor and archive. An isolated customer host uses Supabase authentication, Postgres and private media storage. A server route validates the account and public URL, reserves an account quota, starts a bounded TinyFish job and polls with an owner-bound signed token. The review UI transfers only selected fields into an editable journal draft. Personal-memory AI is separately consented and configured. Source tests exercise provider boundaries, draft selection, persistence and account isolation.
+
+TinyFish integration
+The implemented Web Agent adapter calls POST /v1/automation/run-async and polls GET /v1/runs/{run_id}. Each run has a 12-step, 120-second cap. The request contains only the public URL and fixed extraction goal. The UI shows title, date, venue, program and description candidates, a source link and retrieval timestamp. Users select facts before opening a draft. Missing or blocked information produces an error instead of filling gaps. A connected TinyFish provider run returned PyCon US 2026 details in five steps; this is separate from the pending hosted app acceptance test.
+
+Expected impact
+The intended benefit is a lower-friction way to preserve personal context and revisit meaningful pages without turning private journaling into public performance. Source labels and explicit review can reduce accidental mixing of public information with personal memories. We propose an opt-in pilot with 20 adult DTU users to measure first-page creation, later revisits, trust in the review flow and actual operating costs. No achieved user or retention metrics are claimed.
+
+Feasibility and current implementation
+The source already contains the journal editor, archive, account/database adapters and TinyFish review workflow. On 20 October 2026 the copied project passed 85 automated tests, type checking and its customer production build. A live connected TinyFish extraction completed in five steps. Local journal integration tests save and reopen selected facts under owner checks. The outstanding live work is an isolated hosted account, server-key configuration and the authenticated research-to-save/reopen flow. The original AZINHACK repository and private Schema deployment are unchanged.
+
+Price economics
+The proposed Plus price is ₹149/month, with explicit media, AI and research allowances. Using planning FX of ₹90/USD and published provider marginal rates, typical modeled paid usage costs about ₹26.61/month: ₹5.97 storage/delivery, ₹6 AI, ₹8.64 TinyFish and ₹6 processing/support. After illustrative tax and payment-fee assumptions, net receipts are about ₹122.75, leaving ₹96.15 before free-user subsidy and shared fixed costs. Full allowance use costs about ₹56.97, and the small-cohort stress case can be negative. The workbook includes editable inputs and sources. These figures are planning assumptions, not observed margins.
+
+Revenue model and market
+The proposed free plan has 250 MB of media and five AI answers/month. Plus proposes 5 GB, fifty AI answers and one capped research start/month. Extra research packs require measured costs before pricing. Annual discounts are deferred. Public alternatives already offer media, AI and sharing: Day One Silver is listed at $49.99/year, Gold at $74.99/year, and Journey at $4.17/month billed annually. These are public USD prices, not India checkout quotes. Schema will test whether crafted pages and reviewed public context are worth paying for. Existing pages should remain readable/exportable after downgrade.
+
+Future scope
+Verify the isolated host end to end, run the adult pilot, improve source-based memory retrieval and evaluate voice and selected media imports. Longer-term work includes native mobile pages, confirmed connections between memories and scoped shared albums. Automatic whole-life imports, public feeds and unlimited storage are outside the initial scope.
+
+GitHub field
+Public Kritical repository: https://github.com/biney25/schema-kritical-hacks-2026
+Do not substitute the archived AZINHACK entry as the Kritical repository.
+
+Video field
+The owner will provide the final accessible video URL. No video URL has been invented.
+
+Public post field
+Paste the permanent public LinkedIn post URL after publishing the supplied material. No post has been published by the assistant.
+
+Sources for economics and market claims
+https://www.tinyfish.ai/pricing
+https://supabase.com/pricing
+https://razorpay.com/pricing/
+https://dayoneapp.com/plans/
+https://journey.cloud/membership
+https://us.pycon.org/2026/
+Checked 20 October 2026. Usage, AI budgets, support, FX, tax assumptions and proposed Schema prices are hypotheses in the accompanying workbook.

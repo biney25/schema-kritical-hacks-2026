@@ -1,9 +1,10 @@
 import {getRequestContext} from '#schema-platform';
 import {checkOrigin,json} from '@/lib/server/service.mjs';
-import {EVENT_GOAL, parsePublicUrl, parsePublicFacts, issueRunToken, verifyRunToken} from '@/lib/tinyfish/context.mjs';
+import {parsePublicUrl, issueRunToken, verifyRunToken} from '@/lib/tinyfish/context.mjs';
+
+import {startEventResearch,readEventResearch} from '@/lib/tinyfish/provider.mjs';
 
 export const dynamic='force-dynamic';
-const BASE='https://agent.tinyfish.ai/v1';
 const blocked=(message:string,status=400)=>json({error:message},status);
 
 async function route(req:Request){
@@ -32,14 +33,7 @@ async function route(req:Request){
     const {error:quotaError}=await ctx.client.rpc('schema_hackathon_reserve',{p_kind:'tinyfish'});
     if(quotaError)return blocked(quotaError.code==='PT429'?'Daily event research limit reached.':'Apply the isolated demo quota migration before TinyFish usage.',quotaError.code==='PT429'?429:503);
     // Only a PUBLIC link and a fixed, task-scoped goal are sent to TinyFish.
-    const upstream=await fetch(BASE+'/automation/run-async',{
-      method:'POST',headers:{'Content-Type':'application/json','X-API-Key':key},
-      body:JSON.stringify({url,goal:EVENT_GOAL,browser_profile:'lite'}),
-      signal:AbortSignal.timeout(15000)
-    });
-    if(!upstream.ok)return blocked('TinyFish could not start this request. Check your account and credit balance.',502);
-    const run:any=await upstream.json();const runId=run.run_id??run.runId;
-    if(typeof runId!=='string')return blocked('TinyFish did not return a run ID.',502);
+    const runId=await startEventResearch(url,key);
     const token=await issueRunToken(runId,userId,key,url);
     return ctx.finish(json({token,sourceUrl:url,status:'RUNNING'}));
   }
@@ -47,15 +41,7 @@ async function route(req:Request){
     const search=new URL(req.url).searchParams;
     const token=search.get('token')??'';
     const {runId,sourceUrl}=await verifyRunToken(token,userId,key);
-    const upstream=await fetch(BASE+'/runs/'+encodeURIComponent(runId),{headers:{'X-API-Key':key},signal:AbortSignal.timeout(12000)});
-    if(!upstream.ok)return blocked('Could not check TinyFish status. Please try again.',502);
-    const run:any=await upstream.json();const status=String(run.status??'RUNNING').toUpperCase();
-    if(status==='FAILED'||status==='CANCELLED')return ctx.finish(json({status,error:'TinyFish could not read this event page. Keep your journal draft and try another link.'}));
-    if(status==='COMPLETED'){
-      const facts=parsePublicFacts(run.result??run.resultJson,sourceUrl);
-      return ctx.finish(json({status,facts}));
-    }
-    return ctx.finish(json({status:'RUNNING'}));
+    return ctx.finish(json(await readEventResearch(runId,sourceUrl,key)));
   }
   return blocked('Method not allowed.',405);
  }catch(e:any){

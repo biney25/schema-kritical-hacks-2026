@@ -1,0 +1,38 @@
+SCHEMA SOCIAL POST PACKAGE
+
+Recommended platform
+LinkedIn, from Tushar's personal profile: https://www.linkedin.com/in/tusharaggarwal2510/
+A personal project post is sufficient; a new company page is not required. The jury needs a public, accessible project explanation and the repository link.
+
+Before posting
+The intended new repository URL currently needs publication. Do not publish a post with a broken code link. Confirm the final team roster. Keep the current verification wording unless a real hosted test has since passed.
+
+Exact posting steps
+1. Open Start a post on LinkedIn.
+2. Set the audience to Anyone / Public.
+3. Paste LinkedIn_Post.txt as the post body.
+4. Attach these three images, in this order:
+   Schema_Social_01.png — introduction and the original handcrafted scrapbook illustration.
+   Schema_Social_02.png — how personal notes and reviewed event facts fit together.
+   Schema_Social_03.png — TinyFish's role, privacy boundary and current verification status.
+5. Add the image descriptions below when the interface offers alt text.
+6. Check the repository URL opens publicly, then publish.
+7. Copy the published post's permanent link into the Unstop submission and the repository README. Check that link while signed out.
+
+Alt text 1
+Schema: the story behind your photos. A private scrapbook illustration shows a courtyard gig, a personal note and public context awaiting review. The example is illustrative.
+
+Alt text 2
+A sample scrapbook page separates a person's own note from source-labelled public event context. The workflow is to add a photo and note, research a public event page with TinyFish, then review each fact before creating a draft.
+
+Alt text 3
+TinyFish receives a public event link while private notes and photos stay outside the research request. A provider test returned PyCon US details in five steps. Hosted save/reopen still needs live verification.
+
+Optional second platform
+Instagram accepts the same 1080 by 1350 images as a carousel in the same order. Use the same explanation, but place the code link in your profile or an available link surface because ordinary caption links may not be clickable. LinkedIn should be the primary submitted post link.
+
+Privacy check for attachments
+These images use a labelled illustrative event page and public event facts. They do not show private diary records, email addresses, account settings or API keys. No screenshots from a signed-in service are needed.
+
+Demo video
+The owner is preparing the video separately. It is not required as a LinkedIn attachment when these images are used. If a video is added later, preserve the distinction between the actual hosted flow and provider-only evidence.

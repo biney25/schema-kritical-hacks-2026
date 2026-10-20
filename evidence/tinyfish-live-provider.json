@@ -1,0 +1,22 @@
+{
+  "capture_method": "Connected TinyFish run, not an authenticated Schema host request",
+  "run_id": "43e6a572-a11c-45c5-b8b5-a355b2abe946",
+  "status": "completed",
+  "steps": 5,
+  "duration_seconds": 35,
+  "retrieved_on": "2026-10-20",
+  "result": {
+    "title": "PyCon US 2026",
+    "date": "May 13 to May 19, 2026",
+    "venue": "Long Beach Convention Center, Long Beach, California",
+    "lineup": [
+      "Tutorials",
+      "Keynote Speakers",
+      "AI Track"
+    ],
+    "description": "Annual in-person Python community conference.",
+    "evidence": "PyCon US 2026\u2026held in Long Beach, California, from May 13 to May 19, 2026",
+    "sourceUrl": "https://us.pycon.org/2026/"
+  },
+  "review_notes": "Dates and venue independently checked against the public event homepage. The agent excerpt is compressed wording, not a continuous verbatim quote. This provider test does not verify customer-host auth, API-key setup or save/reopen."
+}
