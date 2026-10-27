@@ -24,7 +24,7 @@ Copy `.env.example` to `.env.local` for local use. On a host, put the same value
 
 Keep keys out of source control. TinyFish starts are limited to five per account per UTC day by the quota migration. Each provider run has a 120-second time limit. The current API beta-gates custom step limits, so this version does not send `max_steps` or claim a twelve-step hard cap. Failed starts can consume an allowance. Set an account budget in TinyFish too.
 
-Personal-memory answers are optional and use separate `AI_ENABLED`, `AI_ALLOWED_EMAILS`, `OPENAI_API_KEY` and `OPENAI_MODEL` settings. Per-account consent and per-page permission still apply. Billing stays disabled.
+Personal-memory answers use Groq's Free plan with `openai/gpt-oss-120b`. Set `AI_PROVIDER=groq`, `GROQ_API_KEY`, `AI_ALLOWED_EMAILS` and `AI_ENABLED=true` only after testing the key. No OpenAI Platform key or paid-provider fallback is used by this standalone app. Keep the Groq account on its Free plan. Enable Zero Data Retention in Groq's Data Controls for journal requests. Per-account consent and per-page permission still apply. Billing stays disabled. See [free AI setup and limits](FREE_AI.md).
 
 ## Start
 

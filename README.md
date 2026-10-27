@@ -78,6 +78,8 @@ Open `http://localhost:3000`, sign in, and open **My life** to add event context
 
 The current memory retrieval adapter ranks keyword matches. Semantic memory connections and native mobile apps are future work.
 
+The standalone app's optional assistant uses **GPT-OSS 120B through GroqCloud's Free plan**, with approved accounts, account consent and individual page permissions. It has no automatic paid-provider fallback. See [free AI setup, privacy and limits](docs/FREE_AI.md). Live provider checks with synthetic pages verified a cited answer and an honest response to a missing fact; those checks do not replace verification of the hosted account-to-answer flow.
+
 ## Price economics
 
 The proposed model offers a limited free plan and **Plus at ₹149/month**, with explicit storage, AI and research allowances. Typical modeled variable cost is about **₹27 per paid user per month**. After illustrative tax and payment-fee assumptions, about **₹96** remains before free-user subsidy and shared fixed costs.
