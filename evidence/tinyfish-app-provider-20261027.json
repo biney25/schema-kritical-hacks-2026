@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-10-27T14:40:52.984Z",
+  "capture_method": "Schema CLI using the application provider module, not the connected TinyFish tool",
+  "source_url": "https://us.pycon.org/2026/",
+  "run_id": "c6260284-1c6d-4067-b5e9-5d53aa29a4a9",
+  "provider_limits": {
+    "max_duration_seconds": 120,
+    "custom_step_limit": null
+  },
+  "approved_fields": [
+    "title",
+    "venue"
+  ],
+  "draft": {
+    "title": "PyCon US 2026",
+    "date": "2026-10-27",
+    "place": "Long Beach Convention Center, 18 S Pine Ave, Long Beach, CA 90802",
+    "tags": [
+      "event"
+    ],
+    "body": "MY MEMORY\n\n(Write what this day meant to you.)\n\nPUBLIC EVENT CONTEXT — reviewed and selected by me\nEvent title: PyCon US 2026\nVenue: Long Beach Convention Center, 18 S Pine Ave, Long Beach, CA 90802\nSource: https://us.pycon.org/2026/\nRetrieved: 2026-10-27T14:27:38.657Z\nFetched with TinyFish. Public information; not a personal memory."
+  },
+  "verification": {
+    "provider_completed": true,
+    "selected_draft_saved_and_reopened": true,
+    "authenticated_hosted_flow": false
+  },
+  "notes": "This confirms live provider extraction and local reviewed-draft persistence. Hosted account, database and media acceptance checks are tracked separately."
+}

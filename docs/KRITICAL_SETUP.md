@@ -22,7 +22,7 @@ Copy `.env.example` to `.env.local` for local use. On a host, put the same value
 | `TINYFISH_API_KEY` | TinyFish server API key |
 | `TINYFISH_ALLOWED_EMAILS` | Comma-separated approved demo accounts |
 
-Keep keys out of source control. TinyFish starts are limited to five per account per UTC day by the quota migration. Each provider run is capped at 12 steps and 120 seconds. Failed starts can consume an allowance. Set an account budget in TinyFish too.
+Keep keys out of source control. TinyFish starts are limited to five per account per UTC day by the quota migration. Each provider run has a 120-second time limit. The current API beta-gates custom step limits, so this version does not send `max_steps` or claim a twelve-step hard cap. Failed starts can consume an allowance. Set an account budget in TinyFish too.
 
 Personal-memory answers are optional and use separate `AI_ENABLED`, `AI_ALLOWED_EMAILS`, `OPENAI_API_KEY` and `OPENAI_MODEL` settings. Per-account consent and per-page permission still apply. Billing stays disabled.
 

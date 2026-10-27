@@ -24,11 +24,13 @@ An event's name, venue and program can sit across interactive tabs and schedules
 
 1. The user supplies a public HTTPS event link and agrees to research it.
 2. The server authenticates the account, validates the URL and reserves its research allowance.
-3. TinyFish starts an asynchronous browser job with a fixed extraction goal, a **12-step limit** and a **120-second limit**.
+3. TinyFish starts an asynchronous browser job with a fixed extraction goal and a **120-second provider time limit**.
 4. Schema polls the run using a signed token tied to its owner.
 5. The user selects facts. The draft builder includes only those selections, their source and retrieval time.
 
 Private journal text and photos never enter the TinyFish request. The provider key stays on the server. Failed research leaves the journal unchanged.
+
+The current deployment uses TinyFish's generally available time limit. Custom step limits require beta access and are not sent by this version. Six-step and twelve-step economics scenarios are cost-model assumptions, not guaranteed limits on a live run.
 
 Implementation: [provider calls](lib/tinyfish/provider.mjs), [HTTP route](app/api/tinyfish/route.ts), [review interface](app/tinyfish-context.tsx) and [draft builder](lib/tinyfish/context.mjs).
 

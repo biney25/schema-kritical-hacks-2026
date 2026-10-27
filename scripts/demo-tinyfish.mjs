@@ -25,8 +25,9 @@ async function main(){
   if(!values.url)throw new Error('Supply --url for live research, or --example to replay the recorded result.');
   const url=parsePublicUrl(values.url),key=process.env.TINYFISH_API_KEY;
   if(!key)throw new Error('Set TINYFISH_API_KEY in your local environment before a live run.');
-  mode='live';console.log('Researching '+url+' (12-step, 120-second cap).');
+  mode='live';console.log('Researching '+url+' (120-second provider time limit).');
   runId=await startEventResearch(url,key);
+  console.log('TinyFish run ID: '+runId);
   const deadline=Date.now()+150000;
   while(Date.now()<deadline){
    const result=await readEventResearch(runId,url,key);

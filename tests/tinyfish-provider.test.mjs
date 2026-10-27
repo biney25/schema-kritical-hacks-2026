@@ -7,7 +7,9 @@ test('provider start sends only the public URL and bounded task, never private p
  let sent;
  const id=await startEventResearch('https://us.pycon.org/2026/','test-provider-key',{request:async(url,options)=>{sent={url,...options};return Response.json({run_id:'run_123456'});}});
  assert.equal(id,'run_123456');const body=JSON.parse(sent.body);
- assert.equal(body.agent_config.max_steps,12);assert.equal(body.agent_config.max_duration_seconds,120);
+ // The live API rejects max_steps for non-beta accounts. Keep a real server
+ // timeout without sending the gated option or relying on a prompt as a cap.
+ assert.equal('max_steps' in body.agent_config,false);assert.equal(body.agent_config.max_duration_seconds,120);
  assert.deepEqual(Object.keys(body).sort(),['agent_config','api_integration','browser_profile','goal','url']);
  assert.equal(body.url,'https://us.pycon.org/2026/');
 });
